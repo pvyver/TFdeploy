@@ -37,10 +37,19 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
     
-    - name: Terraform Init
-      working-directory: ${{ env.TF_WORKING_DIR }}
-      id: init
-      run: terraform init
+    - name: "Terraform Init"
+      uses: AzureCLI@2
+      with:
+        azureSubscription:  shared-${{ parameters.environment }}-001
+        scriptType: bash
+        addSpnToEnvironment: true
+        scriptLocation: inlineScript
+        inlineScript: |
+          export ARM_CLIENT_ID=$servicePrincipalId
+          export ARM_CLIENT_SECRET=$servicePrincipalKey
+          export ARM_TENANT_ID=$tenantId
+
+          terraform init .....
 
     - name: Terraform Plan
       id: plan
