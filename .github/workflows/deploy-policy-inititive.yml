@@ -29,6 +29,13 @@ jobs:
     - name: output workingdir
       id: outputworkingdir
       run: find . -printf '%y %p\n'
+
+    - name: 'Az CLI login'
+      uses: azure/login@v1
+      with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
