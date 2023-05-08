@@ -25,7 +25,7 @@ jobs:
     
     - name: output workingdir
       id: outputworkingdir
-      run: ls
+      run: find . -type f 
     
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
