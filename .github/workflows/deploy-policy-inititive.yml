@@ -1,0 +1,45 @@
+name: 'deployment of azure policies' 
+
+env:
+  TF_IN_AUTOMATION: true 
+  TF_INPUT: false 
+  TF_WORKING_DIR: Policy/Initiatives/ 
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }} 
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }} 
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }} 
+
+on:
+  workflow_dispatch:
+    branches: [ "main" ]
+    paths: 
+    - "Policy/Initiatives/*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: display github context
+      id: context
+      run: echo "$GITHUB_CONTEXT"
+    
+    - name: output workingdir
+      id: outputworkingdir
+      run: ls
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+    
+    - name: Terraform Init
+      id: init
+      working-directory: ${{ env.TF_WORKING_DIR }}
+      run: terraform init
+
+    - name: Terraform Plan
+      id: plan
+      if: ${{ github.event_name == 'pull_request' }}
+      working-directory: ${{ env.TF_WORKING_DIR }}
+      run: terraform plan -no-color 2>&1 | tee /tmp/terraform.plan
+      continue-on-error: true
+
+
