@@ -3,7 +3,7 @@ name: 'deployment of azure policies'
 env:
   TF_IN_AUTOMATION: true 
   TF_INPUT: false 
-  TF_WORKING_DIR: Policy/Initiatives/ 
+  TF_WORKING_DIR: Policy/Definitions/ 
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }} 
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }} 
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     branches: [ "main" ]
     paths: 
-    - "Policy/Initiatives/*"
+    - "Policy/Definitions"
 
 jobs:
   build:
@@ -32,13 +32,11 @@ jobs:
     
     - name: Terraform Init
       id: init
-      working-directory: ${{ env.TF_WORKING_DIR }}
       run: terraform init
 
     - name: Terraform Plan
       id: plan
       if: ${{ github.event_name == 'pull_request' }}
-      working-directory: ${{ env.TF_WORKING_DIR }}
       run: terraform plan -no-color 2>&1 | tee /tmp/terraform.plan
       continue-on-error: true
 
