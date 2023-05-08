@@ -16,11 +16,11 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v2
 
-    - name: display github context
+    - name: Display GitHub Context
       id: context
       run: echo "$GITHUB_CONTEXT"
     
-    - name: output workingdir
+    - name: Output Working Dir
       id: outputworkingdir
       run: find . -printf '%y %p\n'
 
